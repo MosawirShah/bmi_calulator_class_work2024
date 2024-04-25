@@ -1,4 +1,7 @@
+import 'package:bmi_calulator/components/custom_circular_btn.dart';
 import 'package:bmi_calulator/components/icon_content.dart';
+import 'package:bmi_calulator/constants/constant_colours.dart';
+import 'package:bmi_calulator/constants/font_style_constant.dart';
 import 'package:bmi_calulator/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,24 +16,30 @@ class InputView extends StatefulWidget {
   State<InputView> createState() => _InputViewState();
 }
 
+
+enum Gender {male, female}
+
 class _InputViewState extends State<InputView> {
   int height = 120;
+  int weight = 60;
+  int age = 22;
 
-  Color maleontainerColour = inActiveColour;
-  Color femaleContainerColour = inActiveColour;
-  getColor(String gender) {
-    if (gender == 'male') {
-      maleontainerColour = activeColour;
-    } else {
-      maleontainerColour = inActiveColour;
-    }
-    //FEMALE
-    if (gender == 'female') {
-      femaleContainerColour = activeColour;
-    } else {
-      femaleContainerColour = inActiveColour;
-    }
-  }
+  Gender? selectedGender;
+  // Color maleontainerColour = inActiveColour;
+  // Color femaleContainerColour = inActiveColour;
+  // getColor(String gender) {
+  //   if (gender == 'male') {
+  //     maleontainerColour = activeColour;
+  //   } else {
+  //     maleontainerColour = inActiveColour;
+  //   }
+  //   //FEMALE
+  //   if (gender == 'female') {
+  //     femaleContainerColour = activeColour;
+  //   } else {
+  //     femaleContainerColour = inActiveColour;
+  //   }
+  //}
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +57,11 @@ class _InputViewState extends State<InputView> {
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
-                        getColor('male');
+                       selectedGender = Gender.male;
                       });
                     },
                     child: CustomContainer(
-                      myColor: maleontainerColour,
+                      myColor: selectedGender == Gender.male ? kActiveColour : kInActiveColour,
                       // myColor: inActiveColour,
                       custChild: IconContent(
                         iconData: Icons.male,
@@ -66,11 +75,11 @@ class _InputViewState extends State<InputView> {
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
-                        getColor('female');
+                        selectedGender = Gender.female;
                       });
                     },
                     child: CustomContainer(
-                      myColor: femaleContainerColour,
+                      myColor: selectedGender == Gender.female ? kActiveColour : kInActiveColour,
                       custChild: IconContent(
                         iconData: Icons.female,
                         label: "FEMALE",
@@ -84,13 +93,13 @@ class _InputViewState extends State<InputView> {
           //SLider Implementations
           Expanded(
             child: CustomContainer(
-              myColor: inActiveColour,
+              myColor: kInActiveColour,
               custChild: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     "HEIGHT",
-                    style: TextStyle(fontSize: 20, color: contentColour),
+                    style: kLabelStyle,
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -99,30 +108,37 @@ class _InputViewState extends State<InputView> {
                     children: [
                       Text(
                         height.toString(),
-                        style: const TextStyle(
-                          fontSize: 40,
-                          color: contentColour,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: kNumberStyle,
                       ),
                       const SizedBox(width: 5,),
-                      const Text(
+                       Text(
                         "cm",
-                        style: TextStyle(color: contentColour, fontSize: 20),
+                        style: kLabelStyle,
                       ),
                     ],
                   ),
-                  Slider(
-                      value: height.toDouble(),
-                      min: 120,
-                      max: 180,
-                      activeColor: activeColour,
-                      inactiveColor: contentColour,
-                      onChanged: (value) {
-                        setState(() {
-                          height = value.round();
-                        });
-                      }),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: kPinkColor,
+                      overlayColor: kContentColour,
+                      inactiveTrackColor: kContentColour,
+                      thumbColor: kPinkColor,
+                      thumbShape: RoundSliderThumbShape(
+                        enabledThumbRadius: 16
+                      ),
+
+                    ),
+                    child: Slider(
+                        value: height.toDouble(),
+                        min: 120,
+                        max: 180,
+                        onChanged: (value) {
+                          setState(() {
+                            height = value.round();
+                            print(value);
+                          });
+                        }),
+                  ),
                 ],
               ),
             ),
@@ -133,12 +149,57 @@ class _InputViewState extends State<InputView> {
               children: [
                 Expanded(
                   child: CustomContainer(
-                    myColor: inActiveColour,
+                    myColor: kInActiveColour,
+                    custChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ///TODO: 3RD WIDGT
+                         Text("WEIGHT", style:kLabelStyle,),
+                        Text(weight.toString(),style: kNumberStyle,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                          CustomCircularBtn(
+                           iconData: Icons.remove,
+                            onPress: (){
+                            setState(() {
+                              weight--;
+                            });
+                            },
+                          ),
+                          CustomCircularBtn(iconData: Icons.add,onPress: (){
+                            setState(() {
+                              weight++;
+                            });
+                          },)
+                        ],),
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(
                   child: CustomContainer(
-                    myColor: inActiveColour,
+                    myColor: kInActiveColour,
+                    custChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                      Text("AGE",style: kLabelStyle,),
+                      Text(age.toString(), style: kNumberStyle,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                        CustomCircularBtn(iconData: Icons.remove, onPress: (){
+                          setState(() {
+                            age--;
+                          });
+                        },),
+                        CustomCircularBtn(iconData: Icons.add, onPress: (){
+                          setState(() {
+                            age++;
+                          });
+                        },),
+                      ],)
+                    ],),
                   ),
                 ),
               ],
@@ -147,13 +208,13 @@ class _InputViewState extends State<InputView> {
           Container(
             height: 80,
             width: double.infinity,
-            color: inActiveColour,
-            child: Center(
+            color: kPinkColor,
+            child: const Center(
                 child: Text(
               "Calculate",
               style: TextStyle(
-                  color: contentColour,
-                  fontSize: 36,
+                  color: kContentColour,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold),
             )),
           ),
