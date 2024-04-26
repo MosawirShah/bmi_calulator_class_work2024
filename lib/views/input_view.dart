@@ -1,8 +1,11 @@
+import 'package:bmi_calulator/components/custom_bottom_container.dart';
 import 'package:bmi_calulator/components/custom_circular_btn.dart';
 import 'package:bmi_calulator/components/icon_content.dart';
 import 'package:bmi_calulator/constants/constant_colours.dart';
 import 'package:bmi_calulator/constants/font_style_constant.dart';
 import 'package:bmi_calulator/main.dart';
+import 'package:bmi_calulator/view_model/bmi_result_calculator.dart';
+import 'package:bmi_calulator/views/result_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -20,7 +23,7 @@ class InputView extends StatefulWidget {
 enum Gender {male, female}
 
 class _InputViewState extends State<InputView> {
-  int height = 120;
+  int height = 140;
   int weight = 60;
   int age = 22;
 
@@ -205,20 +208,14 @@ class _InputViewState extends State<InputView> {
               ],
             ),
           ),
-          Container(
-            height: 80,
-            width: double.infinity,
-            color: kPinkColor,
-            child: const Center(
-                child: Text(
-              "Calculate",
-              style: TextStyle(
-                  color: kContentColour,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold),
-            )),
-          ),
+         CustomBottomContainer(btnText: "CALCULATE",onPress: (){
+           print(selectedGender);
+           print(height);
+           BMIResultCalulator bmiCalculate = BMIResultCalulator( calculatedHeight: height, calculatedWeight: weight);
+           Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ResultView(bmi: bmiCalculate.bmiCalculate(),resultText: bmiCalculate.getResultText(),interpretation: bmiCalculate.getInterpretation(),)));
+         },),
         ],
+
       ),
     );
   }
