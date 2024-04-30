@@ -9,12 +9,14 @@ class CustomBottomContainer extends StatelessWidget {
   void Function() onPress;
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return  GestureDetector(
       onTap: onPress,
       child: Container(
         height: 80,
         width: double.infinity,
-        color: kPinkColor,
+        color: isDark?kPinkColor : kGreenColor,
         child: Center(
             child: Text(
               btnText,
